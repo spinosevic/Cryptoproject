@@ -1,7 +1,11 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+User.destroy_all
+@dario=User.create(username: "spinoza", password: "spinoza", first_name: "Spina", last_name: "Spina", email: "Spinoza",created: "01/01/2019", last_access: "01/01/2019")
+Item.create(user_id: @dario.id, coin: "cardano", amount: 3, price_per_unit: 0.40)
+Item.create(user_id: @dario.id, coin: "litecoin", amount: 120, price_per_unit: 32)
+Item.create(user_id: @dario.id, coin: "ethereum", amount: 120, price_per_unit: 88)
+Item.create(user_id: @dario.id, coin: "ripple", amount: 1000, price_per_unit: 0.40)
+Item.create(user_id: @dario.id, coin: "bitcoin", amount: 10, price_per_unit: 3200)
+Item.create(user_id: @dario.id, coin: "augur", amount: 120, price_per_unit: 12)
+Item.create(user_id: @dario.id, coin: "verge", amount: 120, price_per_unit: 0.004)
+Item.create(user_id: @dario.id, coin: "steem", amount: 120, price_per_unit: 0.22)
+Item.create(user_id: @dario.id, coin: "status", amount: 140, price_per_unit: 0.02)

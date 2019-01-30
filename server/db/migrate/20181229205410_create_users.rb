@@ -6,6 +6,9 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       t.string :last_name
       t.string :password_digest
       t.string :email
+      t.string :last_access
+      t.string :created
+      t.string :total, array: true, default: [['Day','Total','Break-even-point']]
       t.timestamps
     end
   end

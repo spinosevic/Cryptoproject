@@ -52,7 +52,7 @@ class MenuItems extends React.Component {
           name="coin"
           value={this.state.coin}
           onChange={this.handleChangeSelect}
-          options={options}
+          options={this.props.coinsoptions}
           styles={customStyles}
 
         />
@@ -67,7 +67,7 @@ class MenuItems extends React.Component {
         </Grid>
 
         <Grid item xs={8} sm={3}>
-          <TextField onChange={this.handleChange} name="price_per_unit" required id="coinPrice" label="Price per unit" fullWidth />
+          <TextField onChange={this.handleChange} name="price_per_unit" required id="coinPrice" label="Price per unit (EUR)" fullWidth />
         </Grid>
       </Grid>
 

@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 2019_01_11_132103) do
   create_table "items", force: :cascade do |t|
     t.integer "user_id"
     t.string "coin"
-    t.integer "amount"
-    t.integer "price_per_unit"
+    t.float "amount"
+    t.float "price_per_unit"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -41,6 +41,9 @@ ActiveRecord::Schema.define(version: 2019_01_11_132103) do
     t.string "last_name"
     t.string "password_digest"
     t.string "email"
+    t.string "last_access"
+    t.string "created"
+    t.string "total", default: [["Day", "Total", "Break-even-point"]], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

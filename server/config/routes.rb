@@ -7,4 +7,7 @@ Rails.application.routes.draw do
  get 'getcoins', to: 'user#getcoins'
  get 'validate', to: 'user#validate'
  get 'personalitems', to: 'user#personalitems'
+ put 'dailyUpdate', to: 'user#dailyUpdate'
+ get 'getTotal', to: 'user#getTotal'
+
 end

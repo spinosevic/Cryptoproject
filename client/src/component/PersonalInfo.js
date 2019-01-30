@@ -11,6 +11,7 @@ import InputLabel from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import MenuItems from './MenuItems'
 import API from './API'
 
@@ -38,11 +39,19 @@ class PersonalInfo extends React.Component  {
     },()=>{console.log(this.state)}))
   }
 
-  lines = () =>{
+  addlines = () =>{
     let lines= this.state.lines
     this.setState({
       lines: lines+1
     })
+  }
+  removelines = () =>{
+    let lines= this.state.lines
+    if(lines>1){
+      this.setState({
+        lines: lines-1
+      })
+    }
   }
 
    createLines = () => {
@@ -60,8 +69,11 @@ class PersonalInfo extends React.Component  {
       <Typography variant="h6" gutterBottom>
         Add your coins
       </Typography>
-      <Fab onClick={this.lines} color="primary" aria-label="Add" size='small' >
+      <Fab onClick={this.addlines} color="primary" aria-label="Add" size='small' >
         <AddIcon />
+      </Fab>
+      <Fab onClick={this.removelines} color="primary" aria-label="Add" size='small' >
+        <RemoveIcon />
       </Fab>
       <br />
       {this.createLines()}

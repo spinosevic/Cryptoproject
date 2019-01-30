@@ -7,13 +7,15 @@ import SignIn from './component/SignIn'
 import Registration from './component/Registration'
 import PersonalPage from './component/PersonalPage'
 import API from './component/API'
+import Edit from './component/Edit'
 
 
 
 
 class App extends Component {
   state={
-    username: ''
+    username: '',
+    coins: []
   }
   signin = user => {
      if(user.remember){
@@ -28,6 +30,12 @@ class App extends Component {
     localStorage.setItem('token','')
     this.setState({
       username: ''
+    })
+  }
+
+  coins = (coinsArray) =>{
+    this.setState({
+      coins: coinsArray
     })
   }
 

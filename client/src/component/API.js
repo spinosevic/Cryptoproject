@@ -10,7 +10,8 @@ class API {
     this.createNews=this.baseUrl+'/createnews'
     this.getNewsUrl=this.baseUrl+'/getnews'
     this.getCoinsUrl=this.baseUrl+'/getcoins'
-
+    this.dailyUpdate=this.baseUrl+'/dailyUpdate'
+    this.getTotal=this.baseUrl+'/getTotal'
   }
 
   static signin (user) {
@@ -60,7 +61,10 @@ class API {
      })
    })
  }
-
+ static async handleNews (){
+   await API.newsAPI()
+  return await API.getNews()
+ }
  static getNews () {
    return fetch(this.getNewsUrl)
    .then(resp => resp.json())
@@ -77,16 +81,35 @@ class API {
    .then(resp => resp.json())
  }
 
+static getTotal2 () {
+  const token= localStorage.getItem('token')
+  return fetch(this.getTotal, {
+    method: 'GET',
+    headers: {
+      'Authorization': token
+    },
+  })
+  .then(resp => resp.json())
+}
 
+ static getCoinsCurrentValue (coins) {
+   let string =''
+   coins.map(coin=>{
+     return string+=`${coin}%2C`
+   })
+   return fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${string}&vs_currencies=eur`)
+  .then(resp => resp.json())
+
+ }
  static getCoinSymbols () {
-    return fetch('https://api.coingecko.com/api/v3/coins/list')
+    return fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=100&page=1&sparkline=false')
    .then(resp => resp.json())
    .then(json => {
      let newArray=[]
      json.slice(0,100).map(function(e) {
       return newArray.push({value:e["symbol"], label: e["id"]})
-
-  })
+  }
+)
    return newArray
  })
  }
@@ -96,6 +119,79 @@ static getValue (coin) {
   return fetch(`https://api.coingecko.com/api/v3/coins/${coin}`)
  .then(resp => resp.json())
 }
+
+
+static firstCoinHistory(state){
+  let total = 0
+   const promises = state.coins.map(coin=>{
+    return  fetch(`https://api.coingecko.com/api/v3/coins/${coin.coin}/history?date=${state.created}`)
+    .then(resp => resp.json())
+    .then(json=>{
+      return total+=json.market_data.current_price.eur*coin.amount})
+   })
+   return Promise.all(promises)
+ }
+
+ static updateTotal(total){
+   const token= localStorage.getItem('token')
+   return fetch(this.dailyUpdate, {
+     method: 'PUT',
+     headers: {
+       'Authorization': token,
+       'Content-Type': 'application/json'
+     },
+     body: JSON.stringify({total: total})
+   }).then(resp => console.log(resp.json()))
+ }
+
+
+ static getAllCoinsHistory(state, days, breakevenpoint){
+    let arrayTotal = []
+    for (let i = 1; i < days; i++){
+     let day = new Date(API.changeDateFormatToUS(state.last_access))
+     day.setDate(day.getDate() + i)
+     let selectedDay = API.changeDataFormatfromDateToEU(day)
+      const promises = state.coins.map(coin => {
+        arrayTotal.push(fetch(`https://api.coingecko.com/api/v3/coins/${coin.coin}/history?date=${selectedDay}`)
+          .then(resp => resp.json())
+          .then(json => {
+            return json.market_data.current_price.eur * coin.amount})
+        )
+      })
+    }
+    return Promise.all(arrayTotal)
+  }
+
+static last30days(selectedCoin){
+  let arrayTotal = []
+  for (let i = 30; i > 0; i--){
+      let day = new Date()
+      day.setDate(day.getDate() - i)
+      let selectedDay = API.changeDataFormatfromDateToEU(day)
+      arrayTotal.push(fetch(`https://api.coingecko.com/api/v3/coins/${selectedCoin.coin}/history?date=${selectedDay}`)
+        .then(resp => resp.json())
+        .then(json => json.market_data.current_price.eur*selectedCoin.amount)
+      )
+  }
+  return Promise.all(arrayTotal)
+}
+
+
+  static changeDateFormatToUS (string){
+    return `${string.slice(3,5)}/${string.slice(0,2)}/${string.slice(6)}`
+  }
+
+  static changeDataFormatfromDateToEU (date){
+    return `${("0" + date.getDate()).slice(-2)}-${("0" + (date.getMonth() + 1)).slice(-2)}-${date.getFullYear()}`
+  }
+
+
+
+
+
+
+
+
 
 }
 
