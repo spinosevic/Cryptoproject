@@ -1,0 +1,4 @@
+:schedule:
+  test_worker:
+    every: 10s
+    class: TestWorker

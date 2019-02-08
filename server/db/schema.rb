@@ -10,10 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_11_132103) do
+ActiveRecord::Schema.define(version: 2019_02_05_125334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bots", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "coin"
+    t.float "percentage"
+    t.float "middle_point"
+    t.float "ratio"
+    t.boolean "selling_mode", default: true
+    t.float "gained_amount"
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "items", force: :cascade do |t|
     t.integer "user_id"
@@ -35,6 +48,13 @@ ActiveRecord::Schema.define(version: 2019_01_11_132103) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notes", force: :cascade do |t|
+    t.string "content"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "first_name"
@@ -43,6 +63,8 @@ ActiveRecord::Schema.define(version: 2019_01_11_132103) do
     t.string "email"
     t.string "last_access"
     t.string "created"
+    t.string "api_key"
+    t.string "api_secret"
     t.string "total", default: [["Day", "Total", "Break-even-point"]], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

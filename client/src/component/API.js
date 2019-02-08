@@ -12,6 +12,16 @@ class API {
     this.getCoinsUrl=this.baseUrl+'/getcoins'
     this.dailyUpdate=this.baseUrl+'/dailyUpdate'
     this.getTotal=this.baseUrl+'/getTotal'
+    this.saveNote=this.baseUrl+'/saveNote'
+    this.getNotes=this.baseUrl+'/getNotes'
+    this.deleteNote=this.baseUrl+'/deleteNote'
+    this.updateCoins=this.baseUrl+'/updateCoins'
+    this.apiKeys=this.baseUrl+'/apiKeys'
+    this.getKeys=this.baseUrl+'/getKeys'
+    this.getBalances=this.baseUrl+'/getBalances'
+    this.buildBot=this.baseUrl+'/buildBot'
+    this.getBots=this.baseUrl+'/getBots'
+    this.stopTheBot=this.baseUrl+'/stopTheBot'
   }
 
   static signin (user) {
@@ -61,9 +71,15 @@ class API {
      })
    })
  }
+
+ static getnewsAPI () {
+   var req = new Request(this.newsUrl);
+   return fetch(req)
+   .then(resp => resp.json())
+ }
+
  static async handleNews (){
-   await API.newsAPI()
-  return await API.getNews()
+   return await API.getnewsAPI()
  }
  static getNews () {
    return fetch(this.getNewsUrl)
@@ -91,6 +107,29 @@ static getTotal2 () {
   })
   .then(resp => resp.json())
 }
+
+  static updateCoins (coins) {
+    const token= localStorage.getItem('token')
+    return fetch(this.updateCoins, {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({coins})
+    }).then(resp => console.log(resp.json()))
+  }
+  static updateCoins2 (coins) {
+    const token= localStorage.getItem('token')
+    return fetch(this.updateCoins, {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({results: coins})
+    })
+  }
 
  static getCoinsCurrentValue (coins) {
    let string =''
@@ -185,10 +224,176 @@ static last30days(selectedCoin){
     return `${("0" + date.getDate()).slice(-2)}-${("0" + (date.getMonth() + 1)).slice(-2)}-${date.getFullYear()}`
   }
 
+  static getNotes2 () {
+    const token= localStorage.getItem('token')
+    return fetch(this.getNotes, {
+      method: 'GET',
+      headers: {
+        'Authorization': token
+      },
+    })
+    .then(resp => resp.json())
+    .then(notes=>notes.notes)
+  }
 
+  static deleteNote2 (note) {
+    const token= localStorage.getItem('token')
+    return fetch(this.deleteNote, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({note})
+    })
+  }
 
+  static saveNote2 (note){
+    const token= localStorage.getItem('token')
+    return fetch(this.saveNote, {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({note})
+    })
+  }
 
+  static apiKeys (apikeys) {
+    const token= localStorage.getItem('token')
+    return fetch(this.apiKeys, {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({apikeys})
+    })
+  }
+  static apiKeys2 (apikeys) {
+    const token= localStorage.getItem('token')
+    return fetch(this.apiKeys, {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({apikeys})
+    })
+  }
+  static getKeys () {
+    const token= localStorage.getItem('token')
+    return fetch(this.getKeys, {
+      method: 'GET',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+  static getKeys2 () {
+    const token= localStorage.getItem('token')
+    return fetch(this.getKeys, {
+      method: 'GET',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res=>res.json())
+  }
 
+  static getBalances () {
+    const token= localStorage.getItem('token')
+    return fetch(this.getBalances, {
+      method: 'GET',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res=>res.json())
+  }
+  static getBalances2 () {
+    const token= localStorage.getItem('token')
+    return fetch(this.getBalances, {
+      method: 'GET',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res=>res.json())
+  }
+
+  static buildBot(botinfo){
+    const token= localStorage.getItem('token')
+    return fetch(this.buildBot, {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({botinfo})
+    })
+  }
+  static buildBot2(botinfo){
+    const token= localStorage.getItem('token')
+    return fetch(this.buildBot, {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({botinfo})
+    })
+  }
+
+  static getBots () {
+    const token= localStorage.getItem('token')
+    return fetch(this.getBots, {
+      method: 'GET',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res=>res.json())
+  }
+  static getBots2 () {
+    const token= localStorage.getItem('token')
+    return fetch(this.getBots, {
+      method: 'GET',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res=>res.json())
+  }
+  static stopTheBot(){
+    const token= localStorage.getItem('token')
+    return fetch(this.stopTheBot, {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res=>res.json())
+  }
+  static stopTheBot2(){
+    const token= localStorage.getItem('token')
+    return fetch(this.stopTheBot, {
+      method: 'POST',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res=>res.json())
+  }
 
 
 
