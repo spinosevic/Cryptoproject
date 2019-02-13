@@ -4,6 +4,13 @@ class ApplicationController < ActionController::API
     JWT.encode(data, secret)
   end
 
+  def encode_key(data)
+    JWT.encode(data,secret)
+  end
+
+  def decode_key(data)
+    JWT.decode(data, secret)
+  end
   def get_current_user
     id = decoded_token['id']
     User.find_by(id: id)
@@ -20,6 +27,6 @@ class ApplicationController < ActionController::API
 
 
   def secret
-    "decoder"
+    ENV["ENCODE_SECRET"]
   end
 end

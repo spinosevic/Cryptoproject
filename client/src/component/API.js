@@ -261,6 +261,7 @@ static last30days(selectedCoin){
   }
 
   static apiKeys (apikeys) {
+
     const token= localStorage.getItem('token')
     return fetch(this.apiKeys, {
       method: 'POST',

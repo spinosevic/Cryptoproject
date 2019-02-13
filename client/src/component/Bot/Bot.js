@@ -98,10 +98,12 @@ class Bot extends React.Component{
     }
 
     editButton = () =>{
+      let information_submitted= this.state.information_submitted
       this.setState({
-        information_submitted:false
+        information_submitted: !information_submitted
       })
     }
+
 
     stopTheBot =()=> {
       API.stopTheBot2()
@@ -165,7 +167,7 @@ class Bot extends React.Component{
 
           </>):
           <div className="edit">
-          <Form handleSubmit={this.firstSubmit}  handleSecondSubmit={this.handleSecondSubmit} />
+          <Form handleSubmit={this.firstSubmit} editButton={this.editButton} handleSecondSubmit={this.handleSecondSubmit} />
           </div>
 
 }      </div>

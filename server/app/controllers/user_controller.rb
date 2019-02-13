@@ -219,9 +219,10 @@ class UserController < ApplicationController
 
   def apiKeys
     @user = get_current_user
+
     if @user
-      @user.api_key = params['apikeys']['apikey']
-      @user.api_secret = params['apikeys']['apisecret']
+      @user.api_key = encode_key(params['apikeys']['apikey'])
+      @user.api_secret = encode_key(params['apikeys']['apisecret'])
       @user.save
     else
       render json: {error: 'Not a valid user.'}, status: 401
@@ -252,8 +253,8 @@ class UserController < ApplicationController
   def getBalances
     @user = get_current_user
     if @user
-      url_balances="https://api.bittrex.com/api/v1.1/account/getbalances?apikey=#{@user.api_key}&nonce=#{Time.now.to_i}"
-      sign=OpenSSL::HMAC.hexdigest('sha512', @user.api_secret.encode("ASCII"),url_balances.encode("ASCII"))
+      url_balances="https://api.bittrex.com/api/v1.1/account/getbalances?apikey=#{decode_key(@user.api_key)[0]}&nonce=#{Time.now.to_i}"
+      sign=OpenSSL::HMAC.hexdigest('sha512', decode_key(@user.api_secret)[0].encode("ASCII"),url_balances.encode("ASCII"))
       response = HTTParty.get(
               url_balances,
               headers: {
@@ -261,6 +262,7 @@ class UserController < ApplicationController
               }
             )
             results=response['result']
+
       render json: {results: results}
     else
       render json: {error: 'Not a valid user.'}, status: 401

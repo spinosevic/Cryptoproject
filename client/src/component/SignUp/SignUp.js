@@ -205,7 +205,6 @@ class SignUp extends React.Component {
             </React.Fragment>
           </Paper>
         </main>
-        <button onClick={()=>console.log(this.state)}>Button </button>
       </React.Fragment>
     );
   }

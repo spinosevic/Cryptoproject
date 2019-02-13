@@ -93,7 +93,7 @@ class Form extends React.Component{
         </Button>
         </div>
         <div className="Button_1">
-        <Button type="submit" value="submit" variant="contained" color="primary"  className={classes.button}>
+        <Button onClick={(e)=>this.handleSubmit(e)} type="submit" value="submit" variant="contained" color="primary"  className={classes.button}>
             Submit
         </Button>
         </div>

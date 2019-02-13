@@ -1,10 +1,12 @@
 require 'sidekiq-scheduler'
-class TestWorker
+class TestWorker < ApplicationController
   include Sidekiq::Worker
 
   def perform(*args)
     @bots=Bot.all
     @bots.each{|bot|
+      api_key=decode_key(bot.user.api_key)[0]
+      api_secret=decode_key(bot.user.api_secret)[0]
       last_operation=bot.middle_point
       market="BTC-#{bot.coin}"
       ticker_price=0
@@ -30,8 +32,8 @@ class TestWorker
               if bot.selling_mode==true
                 # variation>0 && variation.abs>=percentage &&
                 puts "SELLING MODE"
-                url_balance ="https://api.bittrex.com/api/v1.1/account/getbalance?apikey=#{bot.user.api_key}&currency=#{bot.coin}&nonce=#{Time.now.to_i}"
-                sign_balance=OpenSSL::HMAC.hexdigest('sha512', bot.user.api_secret.encode("ASCII"),url_balance.encode("ASCII"))
+                url_balance ="https://api.bittrex.com/api/v1.1/account/getbalance?apikey=#{api_key}&currency=#{bot.coin}&nonce=#{Time.now.to_i}"
+                sign_balance=OpenSSL::HMAC.hexdigest('sha512', api_secret.encode("ASCII"),url_balance.encode("ASCII"))
                 balance_response = HTTParty.get(
                 url_balance,
                 headers: {
@@ -51,10 +53,10 @@ class TestWorker
                                 market: market
                                             }
                                 )
-              best_deal=orderbook_response['result'].sort_by{|x| x["Rate"]}.select{|y| y["Quantity"]>balance_amount}[0]
+              best_deal=orderbook_response['result'].sort_by{|x| -x["Rate"]}.select{|y| y["Quantity"]>balance_amount}[0]
               puts "best deal: #{best_deal}"
-            #   url_sell = "https://api.bittrex.com/api/v1.1/market/selllimit?apikey=#{bot.user.api_key}&market=BTC-#{bot.coin}&quantity=#{balance_amount}&rate=#{best_deal["Rate"]}&nonce=#{Time.now.to_i}"
-            #   sign_sell = OpenSSL::HMAC.hexdigest('sha512', bot.user.api_secret.encode("ASCII"),url_sell.encode("ASCII"))
+            #   url_sell = "https://api.bittrex.com/api/v1.1/market/selllimit?apikey=#{api_key}&market=BTC-#{bot.coin}&quantity=#{balance_amount}&rate=#{best_deal["Rate"]}&nonce=#{Time.now.to_i}"
+            #   sign_sell = OpenSSL::HMAC.hexdigest('sha512', api_secret.encode("ASCII"),url_sell.encode("ASCII"))
             #   sell_response = HTTParty.get(
             #   url_sell,
             #   headers: {
@@ -78,11 +80,12 @@ class TestWorker
                                   market: market
                                               }
                                   )
-                best_deal=orderbook_response['result'].sort_by{|x| -x["Rate"]}.select{|y| y["Quantity"]>=(bot.gained_amount/y["Rate"])}[0]
+                best_deal=orderbook_response['result'].sort_by{|x| x["Rate"]}.select{|y| y["Quantity"]>=(bot.gained_amount/y["Rate"])}[0]
+                puts "best deal: #{best_deal}"
                 balance_amount=bot.gained_amount/best_deal["Rate"]
 
-              #   url_buy = "https://api.bittrex.com/api/v1.1/market/buylimit?apikey=#{bot.user.api_key}&market=BTC-#{bot.coin}&quantity=#{balance_amount}&rate=#{best_deal["Rate"]}&nonce=#{Time.now.to_i}"
-              #   sign_buy = OpenSSL::HMAC.hexdigest('sha512', bot.user.api_secret.encode("ASCII"),url_buy.encode("ASCII"))
+              #   url_buy = "https://api.bittrex.com/api/v1.1/market/buylimit?apikey=#{api_key}&market=BTC-#{bot.coin}&quantity=#{balance_amount}&rate=#{best_deal["Rate"]}&nonce=#{Time.now.to_i}"
+              #   sign_buy = OpenSSL::HMAC.hexdigest('sha512', api_secret.encode("ASCII"),url_buy.encode("ASCII"))
               #   buy_response = HTTParty.get(
               #   url_buy,
               #   headers: {
