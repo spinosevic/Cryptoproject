@@ -58,7 +58,6 @@ class MenuItemsBot extends React.Component {
     const { classes } = this.props;
 
     return(<>
-      <button onClick={()=>console.log(this.props)}> Button </button>
       <React.Fragment>
         <Typography variant="h6" gutterBottom>
         </Typography>
@@ -94,6 +93,7 @@ class MenuItemsBot extends React.Component {
       </Grid>
       </React.Fragment>
       <div className={classes.buttons}>
+
         <Button onClick={()=>{
           this.props.handleSubmit(this.state)
         }}

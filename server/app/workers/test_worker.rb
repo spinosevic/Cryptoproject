@@ -44,14 +44,14 @@ class TestWorker
               balance_amount=balance*bot.ratio
               puts "balance_amount: #{balance_amount}"
 
-              url_orderbook="https://api.bittrex.com/api/v1.1/public/getorderbook?market=BTC-#{bot.coin}&type=sell"
+              url_orderbook="https://api.bittrex.com/api/v1.1/public/getorderbook?market=BTC-#{bot.coin}&type=buy"
               orderbook_response=  HTTParty.get(
                                 url_orderbook,
                                 query: {
                                 market: market
                                             }
                                 )
-              best_deal=orderbook_response['result'].sort_by{|x| -x["Rate"]}.select{|y| y["Quantity"]>balance_amount}[0]
+              best_deal=orderbook_response['result'].sort_by{|x| x["Rate"]}.select{|y| y["Quantity"]>balance_amount}[0]
               puts "best deal: #{best_deal}"
             #   url_sell = "https://api.bittrex.com/api/v1.1/market/selllimit?apikey=#{bot.user.api_key}&market=BTC-#{bot.coin}&quantity=#{balance_amount}&rate=#{best_deal["Rate"]}&nonce=#{Time.now.to_i}"
             #   sign_sell = OpenSSL::HMAC.hexdigest('sha512', bot.user.api_secret.encode("ASCII"),url_sell.encode("ASCII"))
@@ -71,14 +71,14 @@ class TestWorker
           elsif bot.selling_mode==false
                 # variation<0 && variation.abs>=percentage &&
                 puts "BUYING MODE"
-                url_orderbook="https://api.bittrex.com/api/v1.1/public/getorderbook?market=BTC-#{bot.coin}&type=buy"
+                url_orderbook="https://api.bittrex.com/api/v1.1/public/getorderbook?market=BTC-#{bot.coin}&type=sell"
                 orderbook_response=  HTTParty.get(
                                   url_orderbook,
                                   query: {
                                   market: market
                                               }
                                   )
-                best_deal=orderbook_response['result'].sort_by{|x| x["Rate"]}.select{|y| y["Quantity"]>=(bot.gained_amount/y["Rate"])}[0]
+                best_deal=orderbook_response['result'].sort_by{|x| -x["Rate"]}.select{|y| y["Quantity"]>=(bot.gained_amount/y["Rate"])}[0]
                 balance_amount=bot.gained_amount/best_deal["Rate"]
 
               #   url_buy = "https://api.bittrex.com/api/v1.1/market/buylimit?apikey=#{bot.user.api_key}&market=BTC-#{bot.coin}&quantity=#{balance_amount}&rate=#{best_deal["Rate"]}&nonce=#{Time.now.to_i}"

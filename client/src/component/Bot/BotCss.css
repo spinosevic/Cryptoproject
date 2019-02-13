@@ -69,3 +69,26 @@ margin:auto;
 .BotArea{
   flex:1
 }
+.Buttons-Flex{
+  justify-content: space-between;
+  display:flex;
+  width:100%;
+}
+.Button_1{
+  flex:1;
+  margin:20px;
+}
+.Button_2{
+  flex:1;
+  margin:20px;
+}
+
+.edit2{
+  padding: 20px;
+}
+/* .Buttons{
+
+  position: absolute;
+  bottom:-21%;
+  right:0;
+} */

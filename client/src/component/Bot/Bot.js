@@ -151,7 +151,10 @@ class Bot extends React.Component{
         {this.state.information_submitted?
           (this.state.bot_created?
             <><h2>Bot Created!</h2>
-            <button onClick={()=>{this.stopTheBot()}}>Stop the bot</button></>:
+            <Button onClick={()=>{this.stopTheBot()}} variant="contained" color="primary" className={classes.button}>
+                  Stop the bot
+            </Button>
+            </>:
             <>
 
           <Button onClick={()=>{this.editButton()}} variant="contained" color="primary" className={classes.button}>
@@ -162,7 +165,7 @@ class Bot extends React.Component{
 
           </>):
           <div className="edit">
-          <Form handleSubmit={this.firstSubmit} handleSecondSubmit={this.handleSecondSubmit} />
+          <Form handleSubmit={this.firstSubmit}  handleSecondSubmit={this.handleSecondSubmit} />
           </div>
 
 }      </div>

@@ -86,9 +86,19 @@ class Form extends React.Component{
             shrink: true,
           }}
         />
-        <Button type="submit" value="submit" variant="contained" color="primary" id="submitButton" className={classes.button}>
+        <div className="Buttons-Flex">
+        <div className="Button_2">
+        <Button onClick={()=>{this.props.editButton()}} variant="contained" className={classes.button}>
+          Back
+        </Button>
+        </div>
+        <div className="Button_1">
+        <Button type="submit" value="submit" variant="contained" color="primary"  className={classes.button}>
             Submit
         </Button>
+        </div>
+
+        </div>
       </form>
       </div>
     )
